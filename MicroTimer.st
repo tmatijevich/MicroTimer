@@ -1,4 +1,5 @@
 
+(* Timer with microsecond accuracy defined by the current task class *)
 FUNCTION_BLOCK MicroTimer
 
 	RTInfo_0(enable := TRUE);

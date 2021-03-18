@@ -5,4 +5,7 @@
     <File Description="Exported functions and function blocks">MicroTimer.fun</File>
     <File Description="MicroTimer function block definition">MicroTimer.st</File>
   </Files>
+  <Dependencies>
+    <Dependency ObjectName="brsystem" />
+  </Dependencies>
 </Library>

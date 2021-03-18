@@ -2,9 +2,10 @@
 (* Timer with microsecond accuracy defined by the current task class *)
 FUNCTION_BLOCK MicroTimer
 
-	RTInfo_0(enable := TRUE);
+	RTInfo_0();
 	IF RTInfo_0.status = ERR_OK THEN
-		CycleTime := RTInfo_0.cycle_time;
+		RTInfo_0.enable := FALSE;
+		CycleTime 		:= RTInfo_0.cycle_time;
 	END_IF
 	IF Input = FALSE THEN
 		ElapsedTime := 0;

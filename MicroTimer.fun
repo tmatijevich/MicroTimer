@@ -13,3 +13,17 @@ FUNCTION_BLOCK MicroTimer (*Timer with microsecond accuracy defined by the curre
 		CycleTime : UDINT := 1000; (*[us] Default to a conservative value until RTInfo response (typically 1 scan)*)
 	END_VAR
 END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK UTON (*TON() FB with microsecond accuracy defined by the current task class*)
+	VAR_INPUT
+		IN : BOOL; (*Input signal*)
+		PT : TIME; (*Delay time*)
+	END_VAR
+	VAR_OUTPUT
+		Q : BOOL; (*Output signal, the rising edge of the input is delayed by PT*)
+		ET : TIME; (*Elapsed time*)
+	END_VAR
+	VAR
+		MicroTimer_0 : MicroTimer;
+	END_VAR
+END_FUNCTION_BLOCK

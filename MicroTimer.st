@@ -9,12 +9,26 @@ FUNCTION_BLOCK MicroTimer
 		CycleTime 		:= RTInfo_0.cycle_time;
 	END_IF
 	
-	// Determine the elapsed time
 	IF Input = FALSE THEN
-		ElapsedTime := 0;
-	ELSIF (ElapsedTime < TimeDuration) AND (TimeDone = FALSE) THEN // Do not increment time if duration changes after done status
-		ElapsedTime := ElapsedTime + CycleTime;
+		State := 0;
 	END_IF
+	
+	CASE State OF
+		// OFF
+		0:
+			ElapsedTime := 0;
+			IF Input THEN
+				State := 10;
+			END_IF
+			
+		// DELAY
+		10:
+			// Do not increment time if duration changes after done status
+			IF (ElapsedTime < TimeDuration) AND (TimeDone = FALSE) THEN
+				ElapsedTime := ElapsedTime + CycleTime;
+			END_IF
+		
+	END_CASE
 	
 	// Set the output status
 	TimeDone := (ElapsedTime >= TimeDuration OR TimeDone) AND Input; // Do not reset done status if already reached duration
@@ -29,5 +43,27 @@ FUNCTION_BLOCK UTON
 	MicroTimer_0();
 	Q 							:= MicroTimer_0.TimeDone;
 	ET 							:= REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) * 1.0e-03); // Perform floating point division
+
+END_FUNCTION_BLOCK
+
+(* TOF() FB with microsecond accuracy defined by the current task class *)
+FUNCTION_BLOCK UTOF
+
+	CASE State OF
+		// OFF
+		0:
+			Q := FALSE;
+			IF IN THEN
+				Q 		:= TRUE;
+				State 	:= 10;
+			END_IF
+		
+		// ON
+		10:
+			
+		
+		// DELAY
+		20:
+	END_CASE
 
 END_FUNCTION_BLOCK

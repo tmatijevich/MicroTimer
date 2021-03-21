@@ -11,6 +11,7 @@ FUNCTION_BLOCK MicroTimer (*Timer with microsecond accuracy defined by the curre
 	VAR
 		RTInfo_0 : RTInfo := (enable:=TRUE); (*FB instance to return runtime information on the current software object*)
 		CycleTime : UDINT := 1000; (*[us] Default to a conservative value until RTInfo response (typically 1 scan)*)
+		State : USINT; (*Internal state control variable*)
 	END_VAR
 END_FUNCTION_BLOCK
 
@@ -24,6 +25,21 @@ FUNCTION_BLOCK UTON (*TON() FB with microsecond accuracy defined by the current 
 		ET : TIME; (*Elapsed time*)
 	END_VAR
 	VAR
-		MicroTimer_0 : MicroTimer;
+		MicroTimer_0 : MicroTimer; (*Internal function block call*)
+	END_VAR
+END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK UTOF (*TOF() FB with microsecond accuracy defined by the current task class*)
+	VAR_INPUT
+		IN : BOOL; (*Input signal*)
+		PT : TIME; (*Delay time*)
+	END_VAR
+	VAR_OUTPUT
+		Q : BOOL; (*Falling edge of the input signal is delayed by PT*)
+		ET : TIME; (*Elapsed time*)
+	END_VAR
+	VAR
+		MicroTimer_0 : MicroTimer; (*Internal function block call*)
+		State : USINT; (*Internal state control variable*)
 	END_VAR
 END_FUNCTION_BLOCK

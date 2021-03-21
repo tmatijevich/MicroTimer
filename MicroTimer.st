@@ -52,6 +52,7 @@ FUNCTION_BLOCK UTOF
 	CASE State OF
 		// OFF
 		0:
+			MicroTimer_0(Input := FALSE); // Reset the timer
 			Q := FALSE;
 			IF IN THEN
 				Q 		:= TRUE;
@@ -60,10 +61,29 @@ FUNCTION_BLOCK UTOF
 		
 		// ON
 		10:
-			
+			Q := TRUE;
+			IF IN = FALSE THEN
+				State 	:= 20;
+				MicroTimer_0(TimeDuration := TIME_TO_UDINT(PT) * 1000, Input := TRUE);
+				Q  		:= NOT MicroTimer_0.TimeDone; // Reset if time duration is zero
+			END_IF
 		
 		// DELAY
 		20:
+			IF IN THEN
+				State 	:= 10; // Go back to ON
+				MicroTimer_0(Input := FALSE); // Reset the timer
+				Q 		:= TRUE;
+			ELSE
+				MicroTimer_0(TimeDuration := TIME_TO_UDINT(PT) * 1000, Input := TRUE);
+				IF MicroTimer_0.TimeDone THEN
+					State 	:= 0; // Go to OFF
+					Q 		:= FALSE;
+				END_IF
+			END_IF
+		
 	END_CASE
+	
+	ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) * 1.0e-03); // Perform floating point division
 
 END_FUNCTION_BLOCK

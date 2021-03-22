@@ -87,3 +87,39 @@ FUNCTION_BLOCK UTOF
 	ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) * 1.0e-03); // Perform floating point division
 
 END_FUNCTION_BLOCK
+
+(* TP() FB with microsecond precision defined by the current task class *)
+FUNCTION_BLOCK UTP
+
+	CASE State OF
+		// OFF
+		0:
+			// Reset the output and timer
+			Q := FALSE;
+			MicroTimer_0(Input := FALSE);
+			
+			IF IN THEN // From off to on
+				// Start the timer, set the output, and transition to PULSE
+				MicroTimer_0(TimeDuration := TIME_TO_UDINT(PT) * 1000, Input := TRUE);
+				Q 		:= TRUE;
+				State 	:= 10;
+			END_IF
+		
+		// PULSE
+		10:
+			// Update the timer
+			MicroTimer_0(TimeDuration := TIME_TO_UDINT(PT) * 1000, Input := TRUE);
+			// Wait for the pulse to finish
+			IF MicroTimer_0.TimeDone THEN
+				// Reset the output
+				Q := FALSE;
+				
+				IF IN = FALSE THEN
+					// Return to OFF
+					State := 0;
+				END_IF
+			END_IF
+			
+	END_CASE
+
+END_FUNCTION_BLOCK

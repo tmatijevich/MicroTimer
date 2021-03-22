@@ -43,3 +43,18 @@ FUNCTION_BLOCK UTOF (*TOF() FB with microsecond accuracy defined by the current 
 		State : USINT; (*Internal state control variable*)
 	END_VAR
 END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK UTP (*TP() FB with microsecond precision defined by the current task class*)
+	VAR_INPUT
+		IN : BOOL; (*Input signal*)
+		PT : TIME; (*Pulse time*)
+	END_VAR
+	VAR_OUTPUT
+		Q : BOOL; (*Output signal*)
+		ET : TIME; (*Elapsed time*)
+	END_VAR
+	VAR
+		MicroTimer_0 : MicroTimer; (*Internal function block call*)
+		State : USINT; (*Internal state control variable*)
+	END_VAR
+END_FUNCTION_BLOCK

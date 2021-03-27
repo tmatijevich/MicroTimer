@@ -1,5 +1,5 @@
 
-FUNCTION_BLOCK MicroTimer (*Timer with microsecond accuracy defined by the current task class*)
+FUNCTION_BLOCK MicroTimer (*Timer with microsecond precision defined by the current task class*)
 	VAR_INPUT
 		TimeDuration : UDINT; (*[us] Specify the duration of the timer, does not update when TimeDone*)
 		Input : BOOL; (*Set to start the timer, reset to restart timer*)
@@ -15,7 +15,7 @@ FUNCTION_BLOCK MicroTimer (*Timer with microsecond accuracy defined by the curre
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTON (*TON() FB with microsecond accuracy defined by the current task class*)
+FUNCTION_BLOCK UTON (*TON() FB with microsecond precision defined by the current task class*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Delay time*)
@@ -29,7 +29,7 @@ FUNCTION_BLOCK UTON (*TON() FB with microsecond accuracy defined by the current 
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTOF (*TOF() FB with microsecond accuracy defined by the current task class*)
+FUNCTION_BLOCK UTOF (*TOF() FB with microsecond precision defined by the current task class*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Delay time*)

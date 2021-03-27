@@ -30,6 +30,8 @@ FUNCTION_BLOCK MicroTimer
 		
 	END_CASE
 	
+	// Saturate the elapsed time
+	IF ElapsedTime >= TimeDuration THEN ElapsedTime := TimeDuration; END_IF
 	// Set the output status
 	TimeDone := (ElapsedTime >= TimeDuration OR TimeDone) AND Input; // Do not reset done status if already reached duration
 

@@ -1,5 +1,5 @@
 
-(* Timer with microsecond accuracy defined by the current task class *)
+(* Timer with task-class cycle time accuracy *)
 FUNCTION_BLOCK MicroTimer
 
 	// Determine the cycle time from brsystem
@@ -18,7 +18,7 @@ FUNCTION_BLOCK MicroTimer
 		0:
 			ElapsedTime := 0;
 			IF Input THEN
-				State := 10;
+				State := 10; // Start counting the scan after the rising edge of Input
 			END_IF
 			
 		// DELAY
@@ -30,25 +30,27 @@ FUNCTION_BLOCK MicroTimer
 		
 	END_CASE
 	
-	// Saturate the elapsed time
-	IF ElapsedTime >= TimeDuration THEN ElapsedTime := TimeDuration; END_IF
 	// Set the output status
-	TimeDone := (ElapsedTime >= TimeDuration OR TimeDone) AND Input; // Do not reset done status if already reached duration
+	TimeDone := (ElapsedTime >= TimeDuration OR TimeDone) AND Input; // Do not reset done status if already reached duration (i.e. If TimeDuration is increased after TimeDone)
 
 END_FUNCTION_BLOCK
 
-(* TON() FB with microsecond accuracy defined by the current task class *)
+(* TON re-definition with task-class cycle time accuracy *)
 FUNCTION_BLOCK UTON
 
 	MicroTimer_0.Input 			:= IN;
 	MicroTimer_0.TimeDuration 	:= TIME_TO_UDINT(PT) * 1000; // ms to us
 	MicroTimer_0();
 	Q 							:= MicroTimer_0.TimeDone;
-	ET 							:= REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) * 1.0e-03); // Perform floating point division
+	IF MicroTimer_0.ElapsedTime > MicroTimer_0.TimeDuration THEN
+		ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.TimeDuration) / 1000); // Perform floating point division
+	ELSE
+		ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) / 1000);
+	END_IF
 
 END_FUNCTION_BLOCK
 
-(* TOF() FB with microsecond accuracy defined by the current task class *)
+(* TOF re-definition with task-class cycle time accuracy *)
 FUNCTION_BLOCK UTOF
 
 	CASE State OF
@@ -90,7 +92,7 @@ FUNCTION_BLOCK UTOF
 
 END_FUNCTION_BLOCK
 
-(* TP() FB with microsecond precision defined by the current task class *)
+(* TP re-definition with task-class cycle time accuracy *)
 FUNCTION_BLOCK UTP
 
 	CASE State OF

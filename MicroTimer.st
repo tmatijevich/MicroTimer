@@ -43,9 +43,9 @@ FUNCTION_BLOCK UTON
 	MicroTimer_0();
 	Q 							:= MicroTimer_0.TimeDone;
 	IF MicroTimer_0.ElapsedTime > MicroTimer_0.TimeDuration THEN
-		ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.TimeDuration) / 1000); // Perform floating point division
+		ET := PT;
 	ELSE
-		ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) / 1000);
+		ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) / 1000); // Perform floating point division
 	END_IF
 
 END_FUNCTION_BLOCK
@@ -88,7 +88,12 @@ FUNCTION_BLOCK UTOF
 		
 	END_CASE
 	
-	ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) * 1.0e-03); // Perform floating point division
+	// Saturate the elapsed time
+	IF MicroTimer_0.ElapsedTime > TIME_TO_UDINT(PT) * 1000 THEN
+		ET := PT;
+	ELSE
+		ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) / 1000); // Perform floating point division
+	END_IF
 
 END_FUNCTION_BLOCK
 
@@ -131,5 +136,12 @@ FUNCTION_BLOCK UTP
 			END_IF
 			
 	END_CASE
+	
+	// Saturate the elapsed time
+	IF MicroTimer_0.ElapsedTime > TIME_TO_UDINT(PT) * 1000 THEN
+		ET := PT;
+	ELSE
+		ET := REAL_TO_TIME(UDINT_TO_REAL(MicroTimer_0.ElapsedTime) / 1000); // Perform floating point division
+	END_IF
 
 END_FUNCTION_BLOCK

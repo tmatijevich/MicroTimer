@@ -56,9 +56,9 @@ FUNCTION_BLOCK UTOF
 	CASE State OF
 		// OFF
 		0:
-			MicroTimer_0(Input := FALSE); // Reset the timer
 			Q := FALSE;
 			IF IN THEN
+				MicroTimer_0(Input := FALSE); // Reset the timer
 				Q 		:= TRUE;
 				State 	:= 10;
 			END_IF

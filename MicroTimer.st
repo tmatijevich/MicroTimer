@@ -120,15 +120,14 @@ FUNCTION_BLOCK UTP
 			MicroTimer_0(TimeDuration := TIME_TO_UDINT(PT) * 1000, Input := TRUE);
 			// Wait for the pulse to finish
 			IF MicroTimer_0.TimeDone THEN
-				// Go to RESET (keep the output TRUE for this scan to complete the pulse)
+				// Reset the output
+				Q := FALSE;
+				// Go to RESET
 				State := 20;
 			END_IF
 			
 		// RESET
 		20:
-			// Reset the output
-			Q := FALSE;
-			
 			IF IN = FALSE THEN
 				// Reset the timer and return to OFF
 				MicroTimer_0(Input := FALSE);

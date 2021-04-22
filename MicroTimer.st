@@ -1,3 +1,8 @@
+(*
+ * File: MicroTimer.st
+ * Date: 2021-03-18
+ * Author: Tyler Matijevich
+ *)
 
 (* Timer with task-class cycle time accuracy *)
 FUNCTION_BLOCK MicroTimer

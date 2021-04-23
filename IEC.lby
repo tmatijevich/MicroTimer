@@ -7,5 +7,6 @@
   </Files>
   <Dependencies>
     <Dependency ObjectName="brsystem" />
+    <Dependency ObjectName="sys_lib" />
   </Dependencies>
 </Library>

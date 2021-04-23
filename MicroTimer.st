@@ -14,6 +14,15 @@ FUNCTION_BLOCK MicroTimer
 		CycleTime 		:= RTInfo_0.cycle_time;
 	END_IF
 	
+	// Determine if this is a new scan
+	RTC_gettime(ADR(RealTimeClock));
+	IF RealTimeClock.second = RealTimeClockPrevious.second AND RealTimeClock.millisec = RealTimeClockPrevious.millisec AND RealTimeClock.microsec = RealTimeClockPrevious.microsec THEN
+		NewScan := FALSE;
+	ELSE
+		NewScan := TRUE;
+	END_IF
+	RealTimeClockPrevious := RealTimeClock;
+	
 	IF Input = FALSE THEN
 		State := 0;
 	END_IF
@@ -29,7 +38,7 @@ FUNCTION_BLOCK MicroTimer
 		// DELAY
 		10:
 			// Do not increment time if duration changes after done status
-			IF (ElapsedTime < TimeDuration) AND (TimeDone = FALSE) THEN
+			IF (ElapsedTime < TimeDuration) AND (TimeDone = FALSE) AND NewScan THEN
 				ElapsedTime := ElapsedTime + CycleTime;
 			END_IF
 		

@@ -12,6 +12,9 @@ FUNCTION_BLOCK MicroTimer (*Timer with task-class cycle time accuracy*)
 		RTInfo_0 : RTInfo := (enable:=TRUE); (*FB instance to return runtime information on the current software object*)
 		CycleTime : UDINT := 1000; (*[us] Default to a conservative value until RTInfo response (typically 1 scan)*)
 		State : USINT; (*Internal state control variable*)
+		RealTimeClock : RTCtime_typ; (*Current scan time*)
+		RealTimeClockPrevious : RTCtime_typ; (*Previous scan time*)
+		NewScan : BOOL; (*New scan flag for timer updating*)
 	END_VAR
 END_FUNCTION_BLOCK
 

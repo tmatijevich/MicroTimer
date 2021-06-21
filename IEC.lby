@@ -7,6 +7,6 @@
   </Files>
   <Dependencies>
     <Dependency ObjectName="brsystem" />
-    <Dependency ObjectName="sys_lib" />
+    <Dependency ObjectName="AsIOTime" />
   </Dependencies>
 </Library>

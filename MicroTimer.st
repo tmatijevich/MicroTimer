@@ -15,13 +15,13 @@ FUNCTION_BLOCK MicroTimer
 	END_IF
 	
 	// Determine if this is a new scan
-	RTC_gettime(ADR(RealTimeClock));
-	IF RealTimeClock.second = RealTimeClockPrevious.second AND RealTimeClock.millisec = RealTimeClockPrevious.millisec AND RealTimeClock.microsec = RealTimeClockPrevious.microsec THEN
+	TimeIO := AsIOTimeCyclicStart();
+	IF TimeIO = PreviousTimeIO THEN
 		NewScan := FALSE;
 	ELSE
 		NewScan := TRUE;
 	END_IF
-	RealTimeClockPrevious := RealTimeClock;
+	PreviousTimeIO := TimeIO;
 	
 	IF Input = FALSE THEN
 		State := 0;

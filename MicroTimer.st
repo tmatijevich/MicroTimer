@@ -1,51 +1,33 @@
-(*
- * File: MicroTimer.st
- * Date: 2021-03-18
- * Author: Tyler Matijevich
- *)
+(******************************************************************************
+ * File:     MicroTimer\MicroTimer.st 
+ * Author:   matijevict 
+ * Date:     December 21, 2021/5:47 PM 
+ ******************************************************************************
+ * Description: Timer function blocks with microsecond resolution 
+*******************************************************************************)
 
-(* Timer with task-class cycle time accuracy *)
+(* Timer with microsecond resolution *)
 FUNCTION_BLOCK MicroTimer
 
-	// Determine the cycle time from brsystem
-	RTInfo_0();
-	IF RTInfo_0.status = ERR_OK THEN
-		RTInfo_0.enable := FALSE;
-		CycleTime 		:= RTInfo_0.cycle_time;
+	(* Determine the cycle time from brsystem *)
+	RTInfo_0(enable := TRUE);
+	
+	(* Determine the elapsed time *)
+	IF Start = FALSE THEN
+		ElapsedTime := 0;
+	ELSIF Start AND PreviousState = TRUE AND ElapsedTime < Duration AND Done = FALSE AND AsIOTimeCyclicStart() <> PreviousIOTime THEN
+		(* 1. Start counting one scan after the rising edge of start (function block must be called at least once per task class) *)
+		(* 2. Count as long as within input time duration *)
+		(* 3. Count as long as new scan *)
+		ElapsedTime := ElapsedTime + RTInfo_0.cycle_time;
 	END_IF
 	
-	// Determine if this is a new scan
-	TimeIO := AsIOTimeCyclicStart();
-	IF TimeIO = PreviousTimeIO THEN
-		NewScan := FALSE;
-	ELSE
-		NewScan := TRUE;
-	END_IF
-	PreviousTimeIO := TimeIO;
+	(* Confirm when complete *)
+	Done := (ElapsedTime >= Duration OR Done) AND Start;
 	
-	IF Input = FALSE THEN
-		State := 0;
-	END_IF
-	
-	CASE State OF
-		// OFF
-		0:
-			ElapsedTime := 0;
-			IF Input THEN
-				State := 10; // Start counting the scan after the rising edge of Input
-			END_IF
-			
-		// DELAY
-		10:
-			// Do not increment time if duration changes after done status
-			IF (ElapsedTime < TimeDuration) AND (TimeDone = FALSE) AND NewScan THEN
-				ElapsedTime := ElapsedTime + CycleTime;
-			END_IF
-		
-	END_CASE
-	
-	// Set the output status
-	TimeDone := (ElapsedTime >= TimeDuration OR TimeDone) AND Input; // Do not reset done status if already reached duration (i.e. If TimeDuration is increased after TimeDone)
+	(* Update variables for next scan *)
+	PreviousIOTime 	:= AsIOTimeCyclicStart();
+	PreviousState 	:= Start;
 
 END_FUNCTION_BLOCK
 

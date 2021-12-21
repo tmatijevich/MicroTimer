@@ -1,24 +1,21 @@
 
-FUNCTION_BLOCK MicroTimer (*Timer with task-class cycle time accuracy*)
+FUNCTION_BLOCK MicroTimer (*Timer with microsecond resolution*)
 	VAR_INPUT
-		TimeDuration : UDINT; (*[us] Specify the duration of the timer, does not update when TimeDone*)
-		Input : BOOL; (*Set to start the timer, reset to restart timer*)
+		Duration : UDINT; (*[us] Timer duration, modifications ignored if Done*)
+		Start : BOOL; (*Start timer*)
 	END_VAR
 	VAR_OUTPUT
-		ElapsedTime : UDINT; (*[us] Time since Input, halts when duration is reached*)
-		TimeDone : BOOL; (*Set TRUE once the elapsed time has reached the duration, reset with Input*)
+		ElapsedTime : UDINT; (*[us] Elapsed time*)
+		Done : BOOL; (*Set once elapsed time reaches timer duration*)
 	END_VAR
 	VAR
-		RTInfo_0 : RTInfo := (enable:=TRUE); (*FB instance to return runtime information on the current software object*)
-		CycleTime : UDINT := 1000; (*[us] Default to a conservative value until RTInfo response (typically 1 scan)*)
-		State : USINT; (*Internal state control variable*)
-		TimeIO : DINT; (*[us] System time at start of task class*)
-		PreviousTimeIO : DINT; (*[us] Previous system time at start of task class*)
-		NewScan : BOOL; (*New scan flag for timer updating*)
+		RTInfo_0 : RTInfo; (*Runtime information of software object*)
+		PreviousState : BOOL; (*Store the previous start input*)
+		PreviousIOTime : DINT; (*[us] Store previous start time of task class*)
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTON (*TON re-definition with task-class cycle time accuracy*)
+FUNCTION_BLOCK UTON (*Redefinition of TON with microsecond resolution*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Delay time*)
@@ -32,7 +29,7 @@ FUNCTION_BLOCK UTON (*TON re-definition with task-class cycle time accuracy*)
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTOF (*TOF re-definition with task-class cycle time accuracy*)
+FUNCTION_BLOCK UTOF (*Redefinition of TOF with microsecond resolution*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Delay time*)
@@ -47,7 +44,7 @@ FUNCTION_BLOCK UTOF (*TOF re-definition with task-class cycle time accuracy*)
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTP (*TP re-definition with task-class cycle time accuracy*)
+FUNCTION_BLOCK UTP (*Redefinition of TP with microsecond resolution*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Pulse time*)

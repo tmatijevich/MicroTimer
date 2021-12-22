@@ -15,13 +15,13 @@ FUNCTION_BLOCK MicroTimer (*Timer with microsecond resolution*)
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTON (*Redefinition of TON with microsecond resolution*)
+FUNCTION_BLOCK UTON (*Redefinition of TON with millisecond resolution*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Delay time*)
 	END_VAR
 	VAR_OUTPUT
-		Q : BOOL; (*Output signal, the rising edge of the input is delayed by PT*)
+		Q : BOOL; (*IN delayed by PT when high*)
 		ET : TIME; (*Elapsed time*)
 	END_VAR
 	VAR
@@ -29,22 +29,22 @@ FUNCTION_BLOCK UTON (*Redefinition of TON with microsecond resolution*)
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTOF (*Redefinition of TOF with microsecond resolution*)
+FUNCTION_BLOCK UTOF (*Redefinition of TOF with millisecond resolution*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Delay time*)
 	END_VAR
 	VAR_OUTPUT
-		Q : BOOL; (*Falling edge of the input signal is delayed by PT*)
+		Q : BOOL; (*IN delayed by PT when low*)
 		ET : TIME; (*Elapsed time*)
 	END_VAR
 	VAR
 		MicroTimer_0 : MicroTimer; (*Internal function block call*)
-		State : USINT; (*Internal state control variable*)
+		PreviousState : BOOL; (*Store previous input value*)
 	END_VAR
 END_FUNCTION_BLOCK
 
-FUNCTION_BLOCK UTP (*Redefinition of TP with microsecond resolution*)
+FUNCTION_BLOCK UTP (*Redefinition of TP with millisecond resolution*)
 	VAR_INPUT
 		IN : BOOL; (*Input signal*)
 		PT : TIME; (*Pulse time*)
@@ -55,6 +55,6 @@ FUNCTION_BLOCK UTP (*Redefinition of TP with microsecond resolution*)
 	END_VAR
 	VAR
 		MicroTimer_0 : MicroTimer; (*Internal function block call*)
-		State : USINT; (*Internal state control variable*)
+		PreviousState : BOOL; (*Store previous input value*)
 	END_VAR
 END_FUNCTION_BLOCK

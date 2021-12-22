@@ -9,5 +9,6 @@
   <Dependencies>
     <Dependency ObjectName="brsystem" />
     <Dependency ObjectName="AsIOTime" />
+    <Dependency ObjectName="AsIecCon" />
   </Dependencies>
 </Library>

@@ -1,5 +1,12 @@
 # MicroTimer Version History
 
+[See releases on GitHub](https://github.com/tmatijevich/MicroTimer/releases)
+
+## 0.2.0 (2021-12-22)
+- Shorten names of MicroTimer I/O parameters
+- Simplify function block execution by detecting the rising edge of input instead of using states
+- Update comments, add README and LICENSE
+
 ## 0.1.1 (2021-06-21)
 - Update method for detecting a new scan with AsIOTime instead of sys_lib
 - Test with separate configuration with sub-millisecond task class
